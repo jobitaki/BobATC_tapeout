@@ -14,6 +14,8 @@ module BobTop(
   output logic [11:0] io_out
 );
 
+  assign io_out[6:0] = '0;
+
   logic [8:0] uart_rx_data, uart_tx_data;
   logic       uart_rx_valid;
   logic       uart_tx_ready;
@@ -70,7 +72,6 @@ module Bob(
   // For RunwayManager
   logic runway_id;
   logic lock, unlock;
-  logic [1:0] runway_active;
 
   // For Aircraft Takeoff FIFO
   logic queue_takeoff_plane, unqueue_takeoff_plane;
@@ -621,23 +622,23 @@ module AircraftIDManager(
 
   logic [15:0] taken_id; // One-hot register that tracks if ID is taken
 
-  always_comb
-    case (1'b0):
-      taken_id[0]:
-      taken_id[1]:
-      taken_id[2]:
-      taken_id[3]:
-      taken_id[4]:
-      taken_id[5]:
-      taken_id[6]:
-      taken_id[7]:
-      taken_id[8]:
-      taken_id[9]:
-      taken_id[10]:
-      taken_id[11]:
-      taken_id[12]:
-      taken_id[13]:
-      taken_id[14]:
-      taken_id[15]:
-    endcase
+  // always_comb
+  //   case (1'b0):
+  //     taken_id[0]:
+  //     taken_id[1]:
+  //     taken_id[2]:
+  //     taken_id[3]:
+  //     taken_id[4]:
+  //     taken_id[5]:
+  //     taken_id[6]:
+  //     taken_id[7]:
+  //     taken_id[8]:
+  //     taken_id[9]:
+  //     taken_id[10]:
+  //     taken_id[11]:
+  //     taken_id[12]:
+  //     taken_id[13]:
+  //     taken_id[14]:
+  //     taken_id[15]:
+  //   endcase
 endmodule : AircraftIDManager
