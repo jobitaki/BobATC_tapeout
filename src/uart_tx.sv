@@ -154,6 +154,17 @@ module uart_tx_fsm(
           send_stop_bit = 1'b1;
         end
       end
+
+      default: begin
+        next_state = IDLE;
+        start              = 1'b0;
+        send_start_bit     = 1'b0;
+        send_data          = 1'b0;
+        send_stop_bit      = 1'b0;
+        en_data_counter    = 1'b0;
+        clear_data_counter = 1'b0;
+        ready              = 1'b0;
+      end
     endcase
   end
 

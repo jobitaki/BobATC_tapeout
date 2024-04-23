@@ -156,6 +156,16 @@ module uart_tx_fsm (
 					next_state = 2'd3;
 					send_stop_bit = 1'b1;
 				end
+			default: begin
+				next_state = 2'd0;
+				start = 1'b0;
+				send_start_bit = 1'b0;
+				send_data = 1'b0;
+				send_stop_bit = 1'b0;
+				en_data_counter = 1'b0;
+				clear_data_counter = 1'b0;
+				ready = 1'b0;
+			end
 		endcase
 	end
 	always @(posedge clock or negedge reset_n)
