@@ -1,14 +1,14 @@
 `default_nettype none
 module uart_rx (
 	clock,
-	reset_n,
+	reset,
 	rx,
 	data,
 	done,
 	framing_error
 );
 	input wire clock;
-	input wire reset_n;
+	input wire reset;
 	input wire rx;
 	output reg [8:0] data;
 	output wire done;
@@ -21,7 +21,7 @@ module uart_rx (
 		.SAMPLE_RATE(16)
 	) conductor(
 		.clock(clock),
-		.reset_n(reset_n),
+		.reset(reset),
 		.start_rx(start),
 		.start_tx(1'b0),
 		.tick(tick)
@@ -31,22 +31,22 @@ module uart_rx (
 	wire clear_data_counter;
 	reg [3:0] data_counter;
 	wire done_data;
-	always @(posedge clock or negedge reset_n)
-		if (!reset_n)
+	always @(posedge clock or posedge reset)
+		if (reset)
 			data <= 1'sb0;
 		else if (collect_data && tick) begin
 			data <= data >> 1;
 			data[8] <= rx;
 		end
 	assign done_data = data_counter == 4'd9;
-	always @(posedge clock or negedge reset_n)
-		if (!reset_n || clear_data_counter)
+	always @(posedge clock or posedge reset)
+		if (reset || clear_data_counter)
 			data_counter <= 1'sb0;
 		else if (en_data_counter && tick)
 			data_counter <= data_counter + 1'b1;
 	uart_rx_fsm fsm(
 		.clock(clock),
-		.reset_n(reset_n),
+		.reset(reset),
 		.tick(tick),
 		.rx(rx),
 		.done_data(done_data),
@@ -60,7 +60,7 @@ module uart_rx (
 endmodule
 module uart_rx_fsm (
 	clock,
-	reset_n,
+	reset,
 	tick,
 	rx,
 	done_data,
@@ -72,7 +72,7 @@ module uart_rx_fsm (
 	done
 );
 	input wire clock;
-	input wire reset_n;
+	input wire reset;
 	input wire tick;
 	input wire rx;
 	input wire done_data;
@@ -134,8 +134,8 @@ module uart_rx_fsm (
 				end
 		endcase
 	end
-	always @(posedge clock or negedge reset_n)
-		if (!reset_n)
+	always @(posedge clock or posedge reset)
+		if (reset)
 			state <= 2'd0;
 		else
 			state <= next_state;

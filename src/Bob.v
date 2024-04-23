@@ -17,7 +17,7 @@ module BobTop (
 	wire uart_tx_send;
 	uart_rx receiver(
 		.clock(clock),
-		.reset_n(~reset),
+		.reset(reset),
 		.rx(io_in[11]),
 		.data(uart_rx_data),
 		.done(uart_rx_valid),
@@ -25,7 +25,7 @@ module BobTop (
 	);
 	uart_tx transmitter(
 		.clock(clock),
-		.reset_n(~reset),
+		.reset(reset),
 		.send(uart_tx_send),
 		.data(uart_tx_data),
 		.tx(io_out[11]),
@@ -33,7 +33,7 @@ module BobTop (
 	);
 	Bob bobby(
 		.clock(clock),
-		.reset_n(~reset),
+		.reset(reset),
 		.uart_rx_data(uart_rx_data),
 		.uart_rx_valid(uart_rx_valid),
 		.uart_tx_data(uart_tx_data),
@@ -45,7 +45,7 @@ module BobTop (
 endmodule
 module Bob (
 	clock,
-	reset_n,
+	reset,
 	uart_rx_data,
 	uart_rx_valid,
 	uart_tx_data,
@@ -55,7 +55,7 @@ module Bob (
 	runway_active
 );
 	input wire clock;
-	input wire reset_n;
+	input wire reset;
 	input wire [8:0] uart_rx_data;
 	input wire uart_rx_valid;
 	output wire [8:0] uart_tx_data;
@@ -97,7 +97,7 @@ module Bob (
 		.DEPTH(4)
 	) uart_requests(
 		.clock(clock),
-		.reset_n(reset_n),
+		.reset(reset),
 		.data_in(uart_rx_data),
 		.we(uart_rx_valid),
 		.re(uart_rd_request),
@@ -110,7 +110,7 @@ module Bob (
 		.DEPTH(4)
 	) takeoff_fifo(
 		.clock(clock),
-		.reset_n(reset_n),
+		.reset(reset),
 		.data_in(uart_request[8-:4]),
 		.we(queue_takeoff_plane),
 		.re(unqueue_takeoff_plane),
@@ -123,7 +123,7 @@ module Bob (
 		.DEPTH(4)
 	) landing_fifo(
 		.clock(clock),
-		.reset_n(reset_n),
+		.reset(reset),
 		.data_in(uart_request[8-:4]),
 		.we(queue_landing_plane),
 		.re(unqueue_landing_plane),
@@ -133,7 +133,7 @@ module Bob (
 	);
 	ReadRequestFSM fsm(
 		.clock(clock),
-		.reset_n(reset_n),
+		.reset(reset),
 		.uart_empty(uart_empty),
 		.uart_request(uart_request),
 		.takeoff_fifo_full(takeoff_fifo_full),
@@ -160,8 +160,8 @@ module Bob (
 		.set_emergency(set_emergency),
 		.unset_emergency(unset_emergency)
 	);
-	always @(posedge clock or negedge reset_n)
-		if (~reset_n)
+	always @(posedge clock or posedge reset)
+		if (reset)
 			reply_to_send <= 0;
 		else if (send_clear[0] ^ send_clear[1]) begin
 			if (send_clear[0]) begin
@@ -196,7 +196,7 @@ module Bob (
 		.DEPTH(4)
 	) uart_replies(
 		.clock(clock),
-		.reset_n(reset_n),
+		.reset(reset),
 		.data_in(reply_to_send),
 		.we(queue_reply),
 		.re(send_reply),
@@ -206,7 +206,7 @@ module Bob (
 	);
 	SendReplyFSM reply_fsm(
 		.clock(clock),
-		.reset_n(reset_n),
+		.reset(reset),
 		.uart_tx_ready(uart_tx_ready),
 		.reply_fifo_empty(reply_fifo_empty),
 		.send_reply(send_reply),
@@ -214,15 +214,15 @@ module Bob (
 	);
 	RunwayManager manager(
 		.clock(clock),
-		.reset_n(reset_n),
+		.reset(reset),
 		.plane_id(uart_request[8-:4]),
 		.runway_id(runway_id),
 		.lock(lock),
 		.unlock(unlock),
 		.runway_active(runway_active)
 	);
-	always @(posedge clock or negedge reset_n)
-		if (~reset_n)
+	always @(posedge clock or posedge reset)
+		if (reset)
 			emergency <= 1'b0;
 		else if (set_emergency)
 			emergency <= 1'b1;
@@ -231,7 +231,7 @@ module Bob (
 endmodule
 module ReadRequestFSM (
 	clock,
-	reset_n,
+	reset,
 	uart_empty,
 	uart_request,
 	takeoff_fifo_full,
@@ -259,7 +259,7 @@ module ReadRequestFSM (
 	unset_emergency
 );
 	input wire clock;
-	input wire reset_n;
+	input wire reset;
 	input wire uart_empty;
 	input wire [8:0] uart_request;
 	input wire takeoff_fifo_full;
@@ -451,8 +451,8 @@ module ReadRequestFSM (
 			end
 		endcase
 	end
-	always @(posedge clock or negedge reset_n)
-		if (~reset_n) begin
+	always @(posedge clock or posedge reset)
+		if (reset) begin
 			state <= 3'b000;
 			takeoff_first <= 1'b0;
 		end
@@ -463,14 +463,14 @@ module ReadRequestFSM (
 endmodule
 module SendReplyFSM (
 	clock,
-	reset_n,
+	reset,
 	uart_tx_ready,
 	reply_fifo_empty,
 	send_reply,
 	uart_tx_send
 );
 	input wire clock;
-	input wire reset_n;
+	input wire reset;
 	input wire uart_tx_ready;
 	input wire reply_fifo_empty;
 	output reg send_reply;
@@ -494,15 +494,15 @@ module SendReplyFSM (
 			end
 		endcase
 	end
-	always @(posedge clock or negedge reset_n)
-		if (~reset_n)
+	always @(posedge clock or posedge reset)
+		if (reset)
 			state <= 1'd0;
 		else
 			state <= next_state;
 endmodule
 module FIFO (
 	clock,
-	reset_n,
+	reset,
 	data_in,
 	we,
 	re,
@@ -513,7 +513,7 @@ module FIFO (
 	parameter WIDTH = 9;
 	parameter DEPTH = 4;
 	input wire clock;
-	input wire reset_n;
+	input wire reset;
 	input wire [WIDTH - 1:0] data_in;
 	input wire we;
 	input wire re;
@@ -526,8 +526,8 @@ module FIFO (
 	reg [$clog2(DEPTH) - 1:0] get_ptr;
 	assign empty = count == 0;
 	assign full = count == DEPTH;
-	always @(posedge clock or negedge reset_n)
-		if (~reset_n) begin
+	always @(posedge clock or posedge reset)
+		if (reset) begin
 			count <= 0;
 			get_ptr <= 0;
 			put_ptr <= 0;
@@ -551,7 +551,7 @@ module FIFO (
 endmodule
 module RunwayManager (
 	clock,
-	reset_n,
+	reset,
 	plane_id,
 	runway_id,
 	lock,
@@ -559,7 +559,7 @@ module RunwayManager (
 	runway_active
 );
 	input wire clock;
-	input wire reset_n;
+	input wire reset;
 	input wire [3:0] plane_id;
 	input wire runway_id;
 	input wire lock;
@@ -568,8 +568,8 @@ module RunwayManager (
 	reg [9:0] runway;
 	assign runway_active[0] = runway[0];
 	assign runway_active[1] = runway[5];
-	always @(posedge clock or negedge reset_n)
-		if (~reset_n) begin
+	always @(posedge clock or posedge reset)
+		if (reset) begin
 			runway[0] <= 0;
 			runway[5] <= 0;
 			runway <= 0;

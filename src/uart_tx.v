@@ -1,14 +1,14 @@
 `default_nettype none
 module uart_tx (
 	clock,
-	reset_n,
+	reset,
 	send,
 	data,
 	tx,
 	ready
 );
 	input wire clock;
-	input wire reset_n;
+	input wire reset;
 	input wire send;
 	input wire [8:0] data;
 	output reg tx;
@@ -21,7 +21,7 @@ module uart_tx (
 		.SAMPLE_RATE(16)
 	) conductor(
 		.clock(clock),
-		.reset_n(reset_n),
+		.reset(reset),
 		.start_rx(1'b0),
 		.start_tx(start),
 		.tick(tick)
@@ -31,30 +31,30 @@ module uart_tx (
 	wire done_data;
 	wire clear_data_counter;
 	assign done_data = data_counter == 4'd9;
-	always @(posedge clock or negedge reset_n)
-		if (!reset_n || clear_data_counter)
+	always @(posedge clock or posedge reset)
+		if (reset || clear_data_counter)
 			data_counter <= 1'sb0;
 		else if (en_data_counter && tick)
 			data_counter <= data_counter + 1;
 	reg [8:0] saved_data;
 	reg data_bit;
 	wire send_data;
-	always @(posedge clock or negedge reset_n)
-		if (!reset_n)
+	always @(posedge clock or posedge reset)
+		if (reset)
 			saved_data <= 1'sb0;
 		else if (start)
 			saved_data <= data;
 		else if (send_data && tick)
 			saved_data <= saved_data >> 1;
-	always @(posedge clock or negedge reset_n)
-		if (!reset_n)
+	always @(posedge clock or posedge reset)
+		if (reset)
 			data_bit <= 1'b0;
 		else if (send_data && tick)
 			data_bit <= saved_data[0];
 	wire send_start_bit;
 	wire send_stop_bit;
-	always @(posedge clock or negedge reset_n)
-		if (!reset_n)
+	always @(posedge clock or posedge reset)
+		if (reset)
 			tx <= 1'b1;
 		else if (send_start_bit)
 			tx <= 1'b0;
@@ -66,7 +66,7 @@ module uart_tx (
 			tx <= 1'b1;
 	uart_tx_fsm fsm(
 		.clock(clock),
-		.reset_n(reset_n),
+		.reset(reset),
 		.send(send),
 		.tick(tick),
 		.done_data(done_data),
@@ -81,7 +81,7 @@ module uart_tx (
 endmodule
 module uart_tx_fsm (
 	clock,
-	reset_n,
+	reset,
 	send,
 	tick,
 	done_data,
@@ -94,7 +94,7 @@ module uart_tx_fsm (
 	ready
 );
 	input wire clock;
-	input wire reset_n;
+	input wire reset;
 	input wire send;
 	input wire tick;
 	input wire done_data;
@@ -156,20 +156,10 @@ module uart_tx_fsm (
 					next_state = 2'd3;
 					send_stop_bit = 1'b1;
 				end
-			default: begin
-				next_state = 2'd0;
-				start = 1'b0;
-				send_start_bit = 1'b0;
-				send_data = 1'b0;
-				send_stop_bit = 1'b0;
-				en_data_counter = 1'b0;
-				clear_data_counter = 1'b0;
-				ready = 1'b0;
-			end
 		endcase
 	end
-	always @(posedge clock or negedge reset_n)
-		if (!reset_n)
+	always @(posedge clock or posedge reset)
+		if (reset)
 			state <= 2'd0;
 		else
 			state <= next_state;
