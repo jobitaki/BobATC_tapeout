@@ -31,7 +31,7 @@ module uart_rx (
 	wire clear_data_counter;
 	reg [3:0] data_counter;
 	wire done_data;
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset)
 			data <= 1'sb0;
 		else if (collect_data && tick) begin
@@ -39,7 +39,7 @@ module uart_rx (
 			data[8] <= rx;
 		end
 	assign done_data = data_counter == 4'd9;
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset || clear_data_counter)
 			data_counter <= 1'sb0;
 		else if (en_data_counter && tick)
@@ -134,7 +134,7 @@ module uart_rx_fsm (
 				end
 		endcase
 	end
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset)
 			state <= 2'd0;
 		else

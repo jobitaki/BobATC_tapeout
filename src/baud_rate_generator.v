@@ -17,7 +17,7 @@ module baud_rate_generator (
 	parameter DIVISOR = CLK_HZ / (BAUD_RATE * SAMPLE_RATE);
 	reg [$clog2(DIVISOR) + 1:0] clockCount;
 	assign tick = clockCount == DIVISOR;
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset | tick)
 			clockCount <= 1'sb0;
 		else if (start_rx)

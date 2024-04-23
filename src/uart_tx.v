@@ -31,7 +31,7 @@ module uart_tx (
 	wire done_data;
 	wire clear_data_counter;
 	assign done_data = data_counter == 4'd9;
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset || clear_data_counter)
 			data_counter <= 1'sb0;
 		else if (en_data_counter && tick)
@@ -39,21 +39,21 @@ module uart_tx (
 	reg [8:0] saved_data;
 	reg data_bit;
 	wire send_data;
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset)
 			saved_data <= 1'sb0;
 		else if (start)
 			saved_data <= data;
 		else if (send_data && tick)
 			saved_data <= saved_data >> 1;
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset)
 			data_bit <= 1'b0;
 		else if (send_data && tick)
 			data_bit <= saved_data[0];
 	wire send_start_bit;
 	wire send_stop_bit;
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset)
 			tx <= 1'b1;
 		else if (send_start_bit)
@@ -158,7 +158,7 @@ module uart_tx_fsm (
 				end
 		endcase
 	end
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset)
 			state <= 2'd0;
 		else

@@ -160,7 +160,7 @@ module Bob (
 		.set_emergency(set_emergency),
 		.unset_emergency(unset_emergency)
 	);
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset)
 			reply_to_send <= 0;
 		else if (send_clear[0] ^ send_clear[1]) begin
@@ -221,7 +221,7 @@ module Bob (
 		.unlock(unlock),
 		.runway_active(runway_active)
 	);
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset)
 			emergency <= 1'b0;
 		else if (set_emergency)
@@ -451,7 +451,7 @@ module ReadRequestFSM (
 			end
 		endcase
 	end
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset) begin
 			state <= 3'b000;
 			takeoff_first <= 1'b0;
@@ -494,7 +494,7 @@ module SendReplyFSM (
 			end
 		endcase
 	end
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset)
 			state <= 1'd0;
 		else
@@ -526,7 +526,7 @@ module FIFO (
 	reg [$clog2(DEPTH) - 1:0] get_ptr;
 	assign empty = count == 0;
 	assign full = count == DEPTH;
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset) begin
 			count <= 0;
 			get_ptr <= 0;
@@ -568,7 +568,7 @@ module RunwayManager (
 	reg [9:0] runway;
 	assign runway_active[0] = runway[0];
 	assign runway_active[1] = runway[5];
-	always @(posedge clock or posedge reset)
+	always @(posedge clock)
 		if (reset) begin
 			runway[0] <= 0;
 			runway[5] <= 0;
