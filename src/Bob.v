@@ -1116,39 +1116,3 @@ module BaudRateGenerator (
 		else
 			clockCount <= clockCount + 1'b1;
 endmodule
-module baud_rate_generator_tb;
-	reg clock;
-	reg reset;
-	reg start_rx;
-	wire start_tx;
-	wire tick;
-	baud_rate_generator dut(.*);
-	initial begin
-		clock = 0;
-		forever #(1) clock = ~clock;
-	end
-	initial begin
-		start_rx = 0;
-		reset <= 1'b1;
-		@(posedge clock)
-			;
-		reset <= 1'b0;
-		begin : sv2v_autoblock_1
-			reg signed [31:0] i;
-			for (i = 0; i < 1000; i = i + 1)
-				@(posedge clock)
-					;
-		end
-		start_rx <= 1'b1;
-		@(posedge clock)
-			;
-		start_rx <= 1'b0;
-		begin : sv2v_autoblock_2
-			reg signed [31:0] i;
-			for (i = 0; i < 1000; i = i + 1)
-				@(posedge clock)
-					;
-		end
-		$finish;
-	end
-endmodule
