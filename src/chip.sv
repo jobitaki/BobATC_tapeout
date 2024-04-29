@@ -7,6 +7,13 @@ module my_chip (
     input logic reset // Important: Reset is ACTIVE-HIGH
 );
     
-  BobTop top(.*);
+  BobTop top(
+    .clock(clock),
+    .reset(reset),
+    .rx(io_in[0]),
+    .tx(io_out[0]),
+    .framing_error(io_out[1]),
+    .runway_active(io_out[3:2])
+  );
 
 endmodule

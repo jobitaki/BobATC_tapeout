@@ -1,12 +1,7 @@
 --- 
 project:
   source_files:
-    - toplevel_chip.v
-    - chip.sv
     - Bob.v
-    - uart_rx.v
-    - uart_tx.v
-    - baud_rate_generator.v
   top_module:  "toplevel_chip"
 
 # As everyone will have access to all designs, try to make it easy for someone new to your design to know what
