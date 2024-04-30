@@ -112,7 +112,7 @@ module Bob (
 	);
 	FIFO #(
 		.WIDTH(4),
-		.DEPTH(8)
+		.DEPTH(16)
 	) takeoff_fifo(
 		.clock(clock),
 		.reset(reset),
@@ -125,7 +125,7 @@ module Bob (
 	);
 	FIFO #(
 		.WIDTH(4),
-		.DEPTH(8)
+		.DEPTH(16)
 	) landing_fifo(
 		.clock(clock),
 		.reset(reset),
