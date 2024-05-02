@@ -11,9 +11,14 @@ module my_chip (
     .clock(clock),
     .reset(reset),
     .rx(io_in[0]),
+    .runway_override(io_in[2:1]),
+    .emergency_override(io_in[3]),
     .tx(io_out[0]),
     .framing_error(io_out[1]),
-    .runway_active(io_out[3:2])
+    .runway_active(io_out[3:2]),
+    .emergency(io_out[4]),
+    .receiving(io_out[5]),
+    .sending(io_out[6])
   );
 
 endmodule

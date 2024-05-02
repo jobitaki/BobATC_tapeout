@@ -44,6 +44,8 @@ The 8-bit packets are sent in and received through bobATC's UART pins. Because t
 | Output | io_out[5] | receiving | Indicates that the UART receiver is receiving new data |
 | Output | io_out[6] | sending | Indicates that the UART transmitter is sending new data |
 
+bobATC must be run at 25MHz to achieve 115200 baud rate.
+
 ## Hardware Peripherals
 
 bobATC requires external hardware to interface with its UART pins, such as an Arduino or a simple USB to UART adapter. You will need multithreading abilities in your code to be able to take advantage of bobATC's full duplex communication.
@@ -122,5 +124,357 @@ Bob      : ID 0 is available
 ////////////////////////////////////////
 ```
 
-
 ## Media
+
+[Demo video](https://drive.google.com/file/d/1z_5k1JWJLRvMM7I70JxbEHWm40HmHs1p/view?usp=sharing) of bobATC running on an FPGA being interfaced with bobATC_helper.py.
+
+#### Example testbench output
+Alternating takeoff/landing test
+```
+////////////////////////////////////////////////////
+// Begin alternating takeoff/landing stress tests //
+////////////////////////////////////////////////////
+
+FST info: dumpfile sim_build/BobTop.fst opened for output.
+New Plane: Requesting ID for entry at time 87260.0
+Bob      : ID 0 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 261660.0
+Bob      : ID 1 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 436060.0
+Bob      : ID 2 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 610460.0
+Bob      : ID 3 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 784860.0
+Bob      : ID 4 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 959260.0
+Bob      : ID 5 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 1133660.0
+Bob      : ID 6 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 1308060.0
+Bob      : ID 7 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 1482460.0
+Bob      : ID 8 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 1656860.0
+Bob      : ID 9 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 1831260.0
+Bob      : ID 10 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 2005660.0
+Bob      : ID 11 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 2180060.0
+Bob      : ID 12 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 2354460.0
+Bob      : ID 13 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 2528860.0
+Bob      : ID 14 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 2703260.0
+Bob      : ID 15 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 00 : Requesting takeoff at time 2877660.0
+Bob      : Plane 00 hold
+Bob      : Plane 00 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 01 : Requesting takeoff at time 3139260.0
+Bob      : Plane 01 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 02 : Requesting takeoff at time 3313660.0
+Bob      : Plane 02 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 03 : Requesting takeoff at time 3488060.0
+Bob      : Plane 03 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 04 : Requesting takeoff at time 3662460.0
+Bob      : Plane 04 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 05 : Requesting takeoff at time 3836860.0
+Bob      : Plane 05 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 06 : Requesting takeoff at time 4011260.0
+Bob      : Plane 06 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 07 : Requesting takeoff at time 4185660.0
+Bob      : Plane 07 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 08 : Requesting landing at time 4360060.0
+Bob      : Plane 08 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 09 : Requesting landing at time 4534460.0
+Bob      : Plane 09 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 10 : Requesting landing at time 4708860.0
+Bob      : Plane 10 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 11 : Requesting landing at time 4883260.0
+Bob      : Plane 11 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 12 : Requesting landing at time 5057660.0
+Bob      : Plane 12 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 13 : Requesting landing at time 5232060.0
+Bob      : Plane 13 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 14 : Requesting landing at time 5406460.0
+Bob      : Plane 14 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 15 : Requesting landing at time 5580860.0
+Bob      : Plane 15 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 00 : Declaring takeoff/landing runway 1 at time 5755260.0
+Bob      : Plane 08 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 08 : Declaring takeoff/landing runway 1 at time 5929660.0
+Bob      : Plane 01 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 01 : Declaring takeoff/landing runway 1 at time 6104060.0
+Bob      : Plane 09 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 6278460.0
+Bob      : ID 0 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 09 : Declaring takeoff/landing runway 1 at time 6452860.0
+Bob      : Plane 02 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 02 : Declaring takeoff/landing runway 1 at time 6627260.0
+Bob      : Plane 10 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 10 : Declaring takeoff/landing runway 1 at time 6801660.0
+Bob      : Plane 03 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 03 : Declaring takeoff/landing runway 1 at time 6976060.0
+Bob      : Plane 11 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 11 : Declaring takeoff/landing runway 1 at time 7150460.0
+Bob      : Plane 04 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 04 : Declaring takeoff/landing runway 1 at time 7324860.0
+Bob      : Plane 12 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 12 : Declaring takeoff/landing runway 1 at time 7499260.0
+Bob      : Plane 05 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 05 : Declaring takeoff/landing runway 1 at time 7673660.0
+Bob      : Plane 13 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 13 : Declaring takeoff/landing runway 1 at time 7848060.0
+Bob      : Plane 06 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 06 : Declaring takeoff/landing runway 1 at time 8022460.0
+Bob      : Plane 14 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 14 : Declaring takeoff/landing runway 1 at time 8196860.0
+Bob      : Plane 07 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 07 : Declaring takeoff/landing runway 1 at time 8371260.0
+Bob      : Plane 15 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 15 : Declaring takeoff/landing runway 1 at time 8545660.0
+/////////////////////////////////////////////////////
+// Finish alternating takeoff/landing stress tests //
+/////////////////////////////////////////////////////
+```
