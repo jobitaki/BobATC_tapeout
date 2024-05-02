@@ -56,7 +56,7 @@ bobATC requires external hardware to interface with its UART pins, such as an Ar
 
 Testing bobATC was done with a self-checking testbench in cocoTB with Icarus Verilog as the simulator. The testbench sends out a bunch of requests and waits for the expected replies from bobATC, as well as checking various status points inside of bobATC itself. 
 
-To test bobATC yourself, make sure all inputs and outputs are wired properly (make sure the override pins are grounded if you do not want to trigger an emergency or lock both runways!). Make sure you have hardware capable of sending and receiving UART transmissions through pySerial. Use the python script bobATC_helper to send requests to bobATC. Below is a sample sequence of requests you can make to bobATC for a simple test. 
+To test bobATC yourself, make sure all inputs and outputs are wired properly (make sure the override pins are grounded if you do not want to trigger an emergency or lock both runways!). Make sure you have hardware capable of sending and receiving UART transmissions through pySerial. Use the python script [bobATC_helper.py](https://github.com/jobitaki/bobATC_tapeout/blob/main/bobATC_helper.py) to send requests to bobATC. The script will prompt you for the Aircraft ID, Request, and Action bit, assemble it into a packet, send it to the chip, and listen for a response. Input ID 44 will quit the script and close the serial port. Below is a sample sequence of requests you can make to bobATC for a simple test. 
 
 ```
 ////////////////////////////////////////
