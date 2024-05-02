@@ -1,6 +1,8 @@
 <p align="center"><img src="bobATC_logo.png" alt="drawing" width="300"/></p>
 
-# Jaehyun Lim 18-224 Spring 2024 Final Tapeout Project
+## Jaehyun Lim 18-224 Spring 2024 Final Tapeout Project
+
+Visit [BobATC](https://github.com/jobitaki/BobATC) for the original source code for the project in SystemVerilog.
 
 ## Overview
 
