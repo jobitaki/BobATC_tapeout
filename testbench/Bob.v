@@ -1,5 +1,5 @@
 `default_nettype none
-// Latest version
+// Latest version generated with sv2v
 module BobTop (
 	clock,
 	reset,

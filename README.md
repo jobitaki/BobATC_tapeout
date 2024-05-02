@@ -1,7 +1,6 @@
 <p align="center"><img src="bobATC_logo.png" alt="drawing" width="300"/></p>
 
-Jaehyun Lim
-18-224 Spring 2024 Final Tapeout Project
+# Jaehyun Lim 18-224 Spring 2024 Final Tapeout Project
 
 ## Overview
 
@@ -22,8 +21,8 @@ The 8-bit packets are sent in and received through bobATC's UART pins. Because t
 | Message Type    | Binary | Direction | Meaning |
 |:-------------:  |:------:|:------  | :- |
 | REQUEST         | 000    | Aircraft => bobATC | Aircraft requests landing or takeoff. |
-| DECLARE         | 001    | Aircraft => bobATC | Aircraft declares that it has landed or departed from runway ID specified by action bit. Aircraft loses its 4-bit ID designation. |
-| EMERGENCY       | 010    | Aircraft => bobATC | Aircraft declares or resolves ongoing emergency. Action bit 1 declares emergency, 0 resolves emergency. Only the aircraft that originally declared an emergency can resolve it. If multiple aircraft declare emergencies, only the latest one that declared it can resolve it. bobATC will close all runways, meaning no takeoffs will be cleared and all landings will be diverted until the emergency is resolved. Aircraft loses its 4-bit ID designation upon resolving emergency. |
+| DECLARE         | 001    | Aircraft => bobATC | Aircraft declares that it has landed or departed from runway ID specified by action bit. Aircraft loses its 4-bit ID designation (only if the declaration is valid). |
+| EMERGENCY       | 010    | Aircraft => bobATC | Aircraft declares or resolves ongoing emergency. Action bit 1 declares emergency, 0 resolves emergency. Only the aircraft that originally declared an emergency can resolve it. If multiple aircraft declare emergencies, only the latest one that declared it can resolve it. bobATC will close all runways, meaning no takeoffs will be cleared and all landings will be diverted until the emergency is resolved. Aircraft loses its 4-bit ID designation upon resolving emergency |
 | CLEAR           | 011    | bobATC => Aircraft | bobATC clears an aircraft's request to takeoff or land. Action bit specifies runway to use. |
 | HOLD            | 100    | bobATC => Aircraft | bobATC tells an aircraft to wait until clearance. |
 | SAY_AGAIN       | 101    | bobATC => Aircraft | bobATC tells an aircraft that the message type is invalid. |
@@ -45,19 +44,83 @@ The 8-bit packets are sent in and received through bobATC's UART pins. Because t
 | Output | io_out[5] | receiving | Indicates that the UART receiver is receiving new data |
 | Output | io_out[6] | sending | Indicates that the UART transmitter is sending new data |
 
-
-
-
 ## Hardware Peripherals
 
-bobATC requires external hardware to interface with its UART pins.
+bobATC requires external hardware to interface with its UART pins, such as an Arduino or a simple USB to UART adapter. You will need multithreading abilities in your code to be able to take advantage of bobATC's full duplex communication.
 
 ## Design Testing / Bringup
 
-(explain how to test your design; if relevant, give examples of inputs and expected outputs)
+Testing bobATC was done with a self-checking testbench in cocoTB with Icarus Verilog as the simulator. The testbench sends out a bunch of requests and waits for the expected replies from bobATC, as well as checking various status points inside of bobATC itself. 
 
-(if you would like your design to be tested after integration but before tapeout, provide a Python script that uses the Debug Interface posted on canvas and explain here how to run the testing script)
+To test bobATC yourself, make sure all inputs and outputs are wired properly (make sure the override pins are grounded if you do not want to trigger an emergency or lock both runways!). Make sure you have hardware capable of sending and receiving UART transmissions through pySerial. Use the python script bobATC_helper to send requests to bobATC. Below is a sample sequence of requests you can make to bobATC for a simple test. 
+
+```
+////////////////////////////////////////
+//         Begin basic tests          //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 87260.0
+Bob      : ID 0 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 00 : Requesting takeoff at time 261660.0
+Bob      : Plane 00 hold
+Bob      : Plane 00 cleared runway 0
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 523260.0
+Bob      : ID 1 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 01 : Requesting landing at time 697660.0
+Bob      : Plane 01 hold
+Bob      : Plane 01 cleared runway 1
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 959260.0
+Bob      : ID 2 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 02 : Requesting takeoff at time 1133660.0
+Bob      : Plane 02 hold
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+Plane 00 : Declaring takeoff/landing runway 0 at time 1308060.0
+Bob      : Plane 02 cleared runway 0
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+New Plane: Requesting ID for entry at time 1482460.0
+Bob      : ID 0 is available
+
+////////////////////////////////////////
+// TB      : Transaction success!     //
+////////////////////////////////////////
+
+////////////////////////////////////////
+//         Finish basic tests         //
+////////////////////////////////////////
+```
+
 
 ## Media
-
-(optionally include any photos or videos of your design in action)
